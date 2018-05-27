@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/node_modules/art-template/lib/template-web.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+            <!-- jquery  $  bootstrap -->
+        <h1>
+            <a href="/">王者农药</a> 
+            <small>查看英雄信息</small>
+        </h1>
+        <hr>
+        <div id="info">
+            
+        </div>
+    </div>
+    <script type="text/template" id='templ'>
+        <p><strong>编号</strong></p>
+        <input type="text" name='id' class='form-control' value='{{id}}'>
+        <p><strong>姓名</strong></p>
+        <input type="text" name='username' class='form-control' value='{{username}}'>
+        <p><strong>性别</strong></p>
+        <input type="text" name='gender' class='form-control' value='{{gender}}'>
+        <p><strong>创建时间</strong></p>
+        <input type="text" name='ctime' class='form-control'value='{{ctime}}'>
+    </script>
+    <script>
+    $(function(){
+      const search=new URLSearchParams(location.search)
+      const id=search.get('id')
+      console.log(id)
+       axios.get('http://127.0.0.1:5000/api/getinfo?id='+id).then(function(results){
+                // console.log(1111)
+                console.log(results.data.message)
+            if(results.status===200 && results.data.err_code===0){
+                // console.log(results.data.message);
+                const html=template("templ",results.data.message)
+                $('#info').html( html)
+            }else{
+                alert('获取英雄失败');
+            }
+        })
+    })
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/node_modules/art-template/lib/template-web.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules/axios/dist/axios.min.js"></script>
+
+    
+</head>
+<script type='text/template' id='templ'>
+    {{each message}}
+         <tr>
+            <td>{{$value.id}}</td>
+            <td>{{$value.username}}</td>
+            <td>{{$value.gender}}</td>
+            <td>{{$value.ctime}}</td>
+            <td>
+                <a href="/info.html?id={{$value.id}}" class='btn-xs btn-warning'>查看</a>
+                <a href="/edit.html?id={{$value.id}}" class='btn-xs btn-primary'>编辑</a>
+                <a href="/del.html?id={{$value.id}}" class='btn-del btn-xs btn-danger' id='delbtn'>删除</a>
+            </td>
+        </tr>
+    {{/each}}
+</script>
+<body>
+    <div class="container">
+            <h1>乐淘首页</h1>
+            <h1> 王者农药 <small>英雄管理器</small> </h1>
+            <div>
+                <a href="/add.html" class='pull-right btn btn-success'>添加英雄</a>
+            </div>
+        <table class='table table-bordered' >
+            <thead>
+                <tr>
+                    <td>编号</td>
+                    <td>名称</td>
+                    <td>性别</td>
+                    <td>创建时间</td>
+                    <td>操作</td>
+                </tr>
+            </thead>
+            <tbody>
+        
+            </tbody>
+        </table>
+    </div>
+<script>
+    $(function(){
+        // $.ajax({
+        //     url:'http://localhost:5000/api/getheros',
+        //     type:'get',
+        //     success:function(data){
+        //         // console.log(data)
+        //         let html=template('templ',data)
+        //         $('tbody').html( html)
+        //     }
+        // })
+        // http://127.0.0.1:4000/index.html
+        // axios是第三方模块，是专门用来发送ajax请求的
+        // axios的语法：
+        // axios（'请求的路径‘，{发送给服务器的参数对象}）.then(function(){成功的回调函数}).catch(function({失败的回调}))
+        const search=new URLSearchParams(location.search)
+      const id=search.get('id')
+        axios.get('http://127.0.0.1:5000/api/delheros?id='+id).then(function(results){
+                // console.log(1111)
+            //     console.log(results)
+            if(results.status===200 && results.data.err_code===0){
+                location.href='/'
+            }
+        })
+    })
+</script> 
+</body>
+</html>

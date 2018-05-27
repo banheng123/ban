@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/node_modules/art-template/lib/template-web.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+            <!-- jquery  $  bootstrap -->
+        <h1>
+            <a href="/index.html">王者农药</a> 
+            <small>编辑英雄</small>
+        </h1>
+        <hr>
+        <form id='form' action="">
+           
+        </form>
+        <script type="text/template" id='templ'>
+            <div class="form-group">
+                <!-- {{each message}}
+
+                {{/each}} -->
+                    <input type="hidden" name='id' class='form-control' value='{{id}}'>
+                <label for="">名称：</label>
+                <input type="text" name='username' class='form-control' value="{{username}}">
+                <label for="">性别：</label>
+                <label for="">
+                        <input type="radio" name='gender' checked value="{{gender}}">男
+                </label>
+                <label for="">
+                        <input type="radio" name='gender' value="{{gender}}">女
+                </label>
+               
+            </div>
+            <input type="submit" value="编辑英雄" class="btn btn-primary">
+        </script>
+    </div>
+    <script>
+    $(function(){
+      const search=new URLSearchParams(location.search)
+      const id=search.get('id')
+       axios.get('http://127.0.0.1:5000/api/gethero?id='+id).then(results=>{
+                // console.log(1111)
+            //     console.log(results)
+            // console.log(id)
+            console.log(results.data.message);
+            if(results.status===200 && results.data.err_code===0){
+                // console.log(results.data);
+                let html=template("templ",results.data.message[0])
+                $('#form').html( html)
+            }else{
+                alert('获取英雄失败');
+            }
+        })
+        $('#form').on('submit',function(e){
+            e.preventDefault();//阻止form表单提交
+            // $.ajax({
+            //     url:'http://127.0.0.1:5000/api/addheros',
+            //     data:$('form').serialize(),//让参数序列化
+            //     type:'post',
+            //     dataType:'json',
+            //     success:function(data){
+            //         console.log(data);
+            //         if(data.err_code===0){
+            //         location.href='/index.html';
+            //     }else{
+            //         alert("添加新英雄失败");
+            //     }
+            //     }
+            // })
+            axios.post('http://127.0.0.1:5000/api/update',$('form').serialize()).then((results)=>{
+                    if(results.status===200&&results.data.err_code===0){
+                        let html=template("templ",results.data.message)
+                         $('#form').html( html)
+                        location.href='/index.html'
+                    }else{
+                        alert('编辑英雄失败')
+                    }
+            })
+        })
+    })
+    </script>
+</body>
+</html>

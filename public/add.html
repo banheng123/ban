@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/node_modules/art-template/lib/template-web.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+            <!-- jquery  $  bootstrap -->
+        <h1>
+            <a href="/">王者农药</a> 
+            <small>添加新英雄</small>
+        </h1>
+        <hr>
+        <form id='form' action="">
+            <div class="form-group">
+                <label for="">名称：</label>
+                <input type="text" name='username' class='form-control'>
+                <label for="">性别：</label>
+                <label for="">
+                        <input type="radio" name='gender' checked value="男">男
+                </label>
+                <label for="">
+                        <input type="radio" name='gender' value="女">女
+                </label>
+            </div>
+            <input type="submit" value="添加新英雄" class="btn btn-primary">
+        </form>
+    </div>
+    <script>
+    $(function(){
+        $('#form').on('submit',function(e){
+            e.preventDefault();//阻止form表单提交
+            // $.ajax({
+            //     url:'http://127.0.0.1:5000/api/addheros',
+            //     data:$('form').serialize(),//让参数序列化
+            //     type:'post',
+            //     dataType:'json',
+            //     success:function(data){
+            //         console.log(data);
+            //         if(data.err_code===0){
+            //         location.href='/index.html';
+            //     }else{
+            //         alert("添加新英雄失败");
+            //     }
+            //     }
+            // })
+            axios.post('http://127.0.0.1:5000/api/addheros',$('form').serialize()).then((results)=>{
+                    if(results.status===200&&results.data.err_code===0){
+                        location.href='/index.html'
+                    }else{
+                        alert('添加英雄失败')
+                    }
+            })
+        })
+    })
+    </script>
+</body>
+</html>
